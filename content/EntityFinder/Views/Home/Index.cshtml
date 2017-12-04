@@ -1,0 +1,376 @@
+﻿<script>
+
+    function move() {
+        var elem = document.getElementById("myBar");
+        var width = 10;
+        var id = setInterval(frame, 25);
+        function frame() {
+            if (width >= 100) {
+                clearInterval(id);
+            } else {
+                width++;
+                elem.style.width = width + '%';
+                elem.innerHTML = width * 1 + '%';
+            }
+        }
+    }
+
+    @{
+    var s = new EntityFinder.Models.Special();
+
+    var x = s.ApiKey();
+    }
+
+
+    var chooser = {
+        companyChosen: false,
+        emailChosen: false,
+        phoneChose: false,
+
+    }
+
+
+
+    var apiHelper = {
+        apiKey: '@x',
+    }
+
+
+    function pressButton(option) {
+
+        var responseEmail = "<input type='text' class='form-control' placeholder='Email Address' id='email'>";
+        var responsePhone = "<input type='text' class='form-control' placeholder='Phone number' id='phone'>";
+        var responseCompany = "<input type='text' class='form-control' placeholder='Company URL' id='comp'>";
+        var response = "";
+
+        if (option == 0) {
+            response = responseEmail;
+            chooser.companyChosen = false;
+            chooser.phoneChosen = false;
+            chooser.emailChosen = true;
+        }
+        else if (option == 1) {
+            response = responsePhone;
+            chooser.companyChosen = false;
+            chooser.phoneChosen = true;
+            chooser.emailChosen = false;
+        }
+        else if (option == 2) {
+            response = responseCompany;
+            chooser.companyChosen = true;
+            chooser.phoneChosen = false;
+            chooser.emailChosen = false;
+        }
+
+        $('#textInput').html(response);
+    }
+
+
+    function submitForm() {
+        if (chooser.emailChosen == true) {
+            setupEmailRequest();
+        }
+        else if (chooser.companyChosen == true) {
+            setupCompanyRequest();
+        }
+        else if (chooser.phoneChosen == true) {
+            setupPhoneRequest();
+        }
+    }
+
+
+
+
+    function parseJson(obj) {
+        var myObj = obj;
+
+
+        if (myObj.status == 200) {
+            
+            data.theName = myObj.status;
+            document.getElementById('content').innerHTML = "<a class='btn btn-warning' id='modalButton' href='Home/Email'>View Info</a>";
+            
+        }
+        else if (myObj.status == 404 || myObj.status == 202 || myObj.status == 422) {
+            document.getElementById('content').innerHTML = "<h1>NO INFO FOUND</h1>";
+            data.jsonObj = "";
+        }
+
+
+    }
+
+
+    function setupCompanyRequest() {
+        $.fullcontact.companyLookup(apiHelper.apiKey, document.getElementById('comp').value, function (obj) { parseCompanyJson(obj) });
+    }
+
+    function setupEmailRequest() {
+        $.fullcontact.emailLookup(apiHelper.apiKey, document.getElementById('email').value, function (obj) { data.theObject(obj) });
+    }
+
+    function setupPhoneRequest() {
+        $.fullcontact.phoneLookup(apiHelper.apiKey, document.getElementById('phone').value, function (obj) { parsePhoneJson(obj) });
+    }
+
+    function parseCompanyJson(obj) {
+
+        document.getElementById('comp').innerHTML = "";
+        document.getElementById('comp1').innerHTML = "";
+        document.getElementById('comp2').innerHTML = "";
+        document.getElementById('comp3').innerHTML = "";
+
+
+        var myObj = obj;
+        if (myObj.status == 200) {
+            document.getElementById('comp').innerHTML = "<div class='jumbotron' id='appear'><div class='col-lg-12'>"
+                + "Company: " + myObj.organization.name + ", " + "Number of Employees: " + myObj.organization.approxEmployees
+                + ", " + "Founded: " + myObj.organization.founded + "</div></div>";
+            document.getElementById('comp1').innerHTML = "<div class='jumbotron' id='appear1'><div class='col-lg-12'>"
+                + "Overview: " + myObj.organization.overview + "</div></div>";
+            document.getElementById('comp2').innerHTML = "<div class='jumbotron' id='appear2'><div class='col-lg-12'>"
+                + "Phone: " + myObj.organization.contactInfo.phoneNumbers[0].number + ", " + "Address: "
+                + myObj.organization.contactInfo.addresses[0].addressLine1 + ", " + myObj.organization.contactInfo.addresses[0].addressLine2
+                + ", " + myObj.organization.contactInfo.addresses[0].locality + ", "
+                + myObj.organization.contactInfo.addresses[0].region.name + ", "
+                + myObj.organization.contactInfo.addresses[0].region.code + "</div></div>";
+            document.getElementById('comp3').innerHTML = "<div class='jumbotron' id='appear3'><div class='col-lg-12'>"
+                + "Website: " + "<a href='" + myObj.website + "'>" + myObj.website + "</a>" + "</div></div>";
+
+
+        }
+
+
+    }
+
+    function parsePhoneJson(obj) {
+        var myObj = obj;
+        if (myObj.status == 200) {
+            var output = JSON.stringify(myObj);
+            document.getElementById('comp').innerHTMl = output;
+        }
+    }
+
+
+</script>
+
+<!--Main Header Bar-->
+<div class="row" id="ex">
+    <div class="col-lg-3">
+
+    </div>
+    <div class="col-lg-2">
+        <h1 id="explained">Social.</h1>
+    </div>
+    <div class="col-lg-3">
+        <h1 id="explained2">Engineer</h1>
+    </div>
+    <div class="col-lg-4">
+
+    </div>
+</div>
+
+<!--Main control Bar-->
+<div class="well" id="mainControl">
+    
+    <form onsubmit="submitForm()">
+        <div class="row" id="buttonRow">
+            <div class="col-lg-3">
+
+            </div>
+           <!--Button Group-->
+            <div class="col-lg-6">
+                <div class="btn-group btn-group-justified" id="mainButtons">
+                    <a onclick="pressButton(0)" class="btn btn-primary">Email</a>
+                    <a onclick="pressButton(1)" class="btn btn-primary">Phone</a>
+                    <a onclick="pressButton(2)" class="btn btn-primary">Company</a>
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-3" id="emailRow">
+
+            </div>
+            <div class="form-group" id="emailFormGroup">
+                <div class="col-lg-3" id="textInput">
+                    <input type="text" class="form-control" placeholder="choose an option" id="email">
+                </div>
+                <div class="col-lg-3">
+                    <button id="goButton" type="submit" class="button" data-toggle="modal" data-target="#myModal" onclick="submitForm(), move()">Go!</button>
+                </div>
+            </div>
+            <div class="col-lg-3">
+
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-4">
+
+            </div>
+            <div class="col-lg-4">
+                <div id="captcha" class="g-recaptcha" data-sitekey="6LdIAjAUAAAAAHTGoiv7n1VfKREeTXWqeqinYxpE"></div>
+            </div>
+            <div class="col-lg-4">
+
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content" id="modalContent">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Please wait while we fetch your data...</h4>
+            </div>
+            <!-- Modal Body-->
+            <div class="modal-body">
+                <div class="row" id="loadingBar">
+                    <div id="myProgress">
+                        <!--Loading Bar-->
+                        <div id="myBar">10%</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3"></div>
+                    <div class="col-lg-5" id="content"></div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<style>
+    #modalButton{
+        margin-right: 50px;
+        margin-top: 20px;
+        width: 250px;
+    }
+
+    @@media(max-width: 11899px){
+        #goButton{
+            width: 280px;
+        }
+        #footerAdd {
+            visibility: hidden;
+        }
+        #explained, #explained2 {
+            font-size: 80px;
+            align-content: center;
+            color: black;
+        }
+    }
+
+    @@media(min-width: 1200px){
+        #goButton {
+            width: 250px;
+        }
+        #explained2{
+            margin-left: 48px;
+        }
+        #explained, #explained2 {
+            font-size: 80px;
+            align-content: center;
+            color: black;
+        }
+    }
+
+
+
+
+    #myProgress {
+        width: 100%;
+        background-color: grey;
+        border-radius: 5px;
+    }
+    #myBar {
+        width: 10%;
+        height: 30px;
+        background-color: blue;
+        text-align: center; /* To center it horizontally (if you want) */
+        line-height: 30px; /* To center it vertically */
+        color: white;
+        border-radius: 5px;
+    }
+
+
+    .button {
+        -webkit-transition-duration: 0.4s;
+        transition-duration: 0.4s;
+        background-color: yellowgreen;
+        height: 30px;
+        border-radius: 5px;
+        border-width: 2px;
+        color: honeydew;
+    }
+    .button:hover {
+            background-color: #4CAF50;
+            color: white;
+    }
+    #buttonRow{
+        margin-bottom: 30px;
+    }
+    #captcha{
+        margin-top: 50px;
+        margin-bottom: 10px;
+    }
+    #appear{
+        background-color: aquamarine;
+    }
+    #captcha{
+        vertical-align: central;
+        margin-top: 30px;
+    }
+    
+    #mainButtons{
+        margin-bottom: 10px;
+        max-width: 680px;
+    }
+    #mainControl{
+        align-content: center;
+        margin-top: 100px;
+        margin-bottom: 100px;
+
+    }
+    #optionRow {
+        background-color: whitesmoke;
+        margin-left: 0px;
+        margin-right: 0px;
+        border-radius: 20px;
+        border-width: 1px;
+    }
+    #picRow {
+        margin-top: 50px;
+    }
+    .swag {
+        margin-left: 20px;
+    }
+    
+    #ex {
+        border-color: darkcyan;
+        border-width: 3px;
+    }
+    body{
+        
+    }
+</style>
+
+

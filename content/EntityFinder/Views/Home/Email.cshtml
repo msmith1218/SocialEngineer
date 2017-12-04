@@ -1,0 +1,77 @@
+﻿
+@{
+    ViewBag.Title = "Email";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script>
+    function setupRequest() {
+        $.fullcontact.emailLookup(apiHelper.apiKey, document.getElementById('email').value, function (obj) { parseJson(obj) });
+    }
+
+    function parseJson(obj) {
+        document.getElementById('first').innerHTML = ' ';
+        document.getElementById('last').innerHTML = ' ';
+        document.getElementById('name').innerHTML = ' ';
+        document.getElementById('startDate').innerHTML = ' ';
+        document.getElementById('title').innerHTML = ' ';
+        document.getElementById('current').innerHTML = ' ';
+        document.getElementById('city').innerHTML = ' ';
+        document.getElementById("1").innerHTML = ' ';
+        document.getElementById("2").innerHTML = ' ';
+        document.getElementById("3").innerHTML = ' ';
+        document.getElementById("4").innerHTML = ' ';
+
+        var myObj = obj;
+        if (myObj.status == 200) {
+            document.getElementById('first').innerHTML = myObj.contactInfo.givenName;
+            document.getElementById('last').innerHTML = myObj.contactInfo.familyName;
+            document.getElementById('name').innerHTML = myObj.organizations[0].name;
+            document.getElementById('startDate').innerHTML = myObj.organizations[0].startDate;
+            document.getElementById('title').innerHTML = myObj.organizations[0].title;
+            document.getElementById('current').innerHTML = myObj.organizations[0].current;
+            document.getElementById('city').innerHTML = myObj.demographics.locationDeduced.deducedLocation;
+            for (var i = 0; i < myObj.socialProfiles.length; i++) {
+                document.getElementById(String(i + 1)).innerHTML = myObj.socialProfiles[i].typeName + ", " + myObj.socialProfiles[i].url;
+            }
+        }
+        else if (myObj.status == 404 || myObj.status == 202){
+            document.getElementById('first').innerHTML = "NO INFO FOUND";
+        }
+        
+    }
+
+    function jsonFromMain() {
+        document.getElementById('first').innerHTML = data.theObject.familyName;
+
+
+    }
+
+
+
+    
+</script>
+
+<div class="btn-group btn-group-justified" id="viewStuffButton">
+    <a onclick="jsonFromMain()" class="btn btn-primary">Display Results</a>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div id="first">
+
+        </div>
+    </div>
+</div>
+
+
+<style>
+    #first{
+        margin-bottom: 300px;
+    }
+    #viewStuffButton{
+        margin-top: 200px;
+        margin-bottom: 100px;
+    }
+</style>
