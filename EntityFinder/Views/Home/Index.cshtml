@@ -1,0 +1,272 @@
+﻿<script>
+
+    @{
+    var s = new EntityFinder.Models.Special();
+
+    var x = s.ApiKey();
+    }
+
+    var apiHelper = {
+        apiKey: '@x',
+    }
+</script>
+
+<!--Main Header Bar-->
+<div class="row" id="ex">
+    <div class="col-lg-3">
+
+    </div>
+    <div class="col-lg-2">
+        <h1 id="explained">Social.</h1>
+    </div>
+    <div class="col-lg-3">
+        <h1 id="explained2">Engineer</h1>
+    </div>
+    <div class="col-lg-4">
+
+    </div>
+</div>
+
+<!--Main control Bar-->
+<div class="well" id="mainControl">
+    
+    <form onsubmit="submitForm()">
+        <div class="row" id="buttonRow">
+            <div class="col-lg-3">
+
+            </div>
+           <!--Button Group-->
+            <div class="col-lg-6">
+                <div class="btn-group btn-group-justified" id="mainButtons">
+                    <a onclick="pressButton(0)" class="btn btn-primary">Email</a>
+                    <a onclick="pressButton(1)" disabled class="btn btn-primary">Phone</a>
+                    <a onclick="pressButton(2)" class="btn btn-primary">Company</a>
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-3" id="emailRow">
+
+            </div>
+            <div class="form-group" id="emailFormGroup">
+                <div class="col-lg-3" id="textInput">
+                    <input type="text" class="form-control" placeholder="choose an option" id="email">
+                </div>
+                <div class="col-lg-3">
+                    <button id="goButton" type="submit" class="button" data-toggle="modal" data-target="#myModal" onclick="submitForm(), move()">Go!</button>
+                </div>
+            </div>
+            <div class="col-lg-3">
+
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-4">
+
+            </div>
+            <!--captcha stuff-->
+            <div class="col-lg-4">
+                <div id="captcha" class="g-recaptcha" data-sitekey="6LfKujMUAAAAAOMZg3eyBKBJqBpxEGGe2LuLubdo"></div>
+            </div>
+            <div class="col-lg-4">
+
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content" id="modalContent">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Please wait while we fetch your data...</h4>
+            </div>
+            <!-- Modal Body-->
+            <div class="modal-body">
+                <div class="row" id="loadingBar">
+                    <div id="myProgress">
+                        <!--Loading Bar-->
+                        <div id="myBar">10%</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3"></div>
+                    <div class="col-lg-5"><a class='btn btn-warning' id='modalButton' onclick='displayData("content", objectHelper.theObj)'>View Info</a></div>
+
+                </div>
+                <div class="row a">
+                    <div class="col-lg-12"id="content"></div>
+                    
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<style>
+    
+ 
+    #fullname{
+        font-size: 20px;
+        border-bottom: 2px solid red;
+    }
+    #space{
+        background-color: white;
+        border-radius: 10px;
+    }
+    .a{
+        background-color:lightblue;
+        font-size: 15px;
+    }
+
+    @@media(max-width: 400px){
+        #modalButton {
+            margin-left: 20px;
+            margin-top: 20px;
+            width: 250px;
+        }
+        #overview {
+            background-color: lightblue;
+            border-color: black;
+            text-indent: 2.0em;
+            box-shadow: 5px 5px black;
+        }
+        #mainControl {
+            align-content: center;
+            margin-top: 50px;
+            margin-bottom: 100px;
+        }
+    }
+   
+    @@media(max-width: 11899px){
+        #goButton{
+            width: 280px;
+        }
+        #footerAdd {
+            visibility: hidden;
+        }
+        #explained, #explained2 {
+            font-size: 80px;
+            align-content: center;
+            color: black;
+        }
+    }
+    @@media(min-width: 401px){
+        #modalButton {
+            margin-right: 20px;
+            margin-top: 20px;
+            width: 250px;
+        }
+
+        #overview {
+            background-color: lightblue;
+            border-color: black;
+            text-indent: 2.0em;
+            box-shadow: 5px 5px black;
+        }
+        #mainControl {
+            align-content: center;
+            margin-top: 100px;
+            margin-bottom: 100px;
+        }
+    }
+    @@media(min-width: 1200px){
+        #goButton {
+            width: 250px;
+        }
+        #explained2{
+            margin-left: 48px;
+        }
+        #explained, #explained2 {
+            font-size: 80px;
+            align-content: center;
+            color: black;
+        }
+    }
+    #myProgress {
+        width: 100%;
+        background-color: grey;
+        border-radius: 5px;
+    }
+    #myBar {
+        width: 10%;
+        height: 30px;
+        background-color: blue;
+        text-align: center; /* To center it horizontally (if you want) */
+        line-height: 30px; /* To center it vertically */
+        color: white;
+        border-radius: 5px;
+    }
+    .button {
+        -webkit-transition-duration: 0.4s;
+        transition-duration: 0.4s;
+        background-color: yellowgreen;
+        height: 30px;
+        border-radius: 5px;
+        border-width: 2px;
+        color: honeydew;
+    }
+    .button:hover {
+            background-color: #4CAF50;
+            color: white;
+    }
+    #buttonRow{
+        margin-bottom: 30px;
+    }
+    #captcha{
+        margin-top: 50px;
+        margin-bottom: 10px;
+    }
+    #appear{
+        background-color: aquamarine;
+    }
+    #captcha{
+        vertical-align: central;
+        margin-top: 30px;
+    }
+    
+    #mainButtons{
+        margin-bottom: 10px;
+        max-width: 680px;
+    }
+    
+    #optionRow {
+        background-color: whitesmoke;
+        margin-left: 0px;
+        margin-right: 0px;
+        border-radius: 20px;
+        border-width: 1px;
+    }
+    #picRow {
+        margin-top: 50px;
+    }
+    .swag {
+        margin-left: 20px;
+    }
+
+    #ex {
+        border-color: darkcyan;
+        border-width: 3px;
+    }
+
+</style>
+
+
