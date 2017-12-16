@@ -8,13 +8,13 @@ namespace EntityFinder.Controllers
 {
     public class SpecialController : Controller
     {
-        // GET: Special
-        public ActionResult Index()
+        public String GetApiKey()
         {
-            return View();
+            var model = new EntityFinder.Models.Special();
+            return model.ApiKey();
         }
 
-     
-    
+
+
     }
 }
